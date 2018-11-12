@@ -48,11 +48,11 @@ function filenameWithSuffix(filename, suffix) {
  */
 function getImg(req, res, next) {
   const defaultSize = 100;
-  const IMAGES_DIR = process.env.IMAGES_DIR || path.join(__dirname, '..', 'external_images_dir');
+  const IMAGES_DIR = process.env.IMAGES_DIR || path.join(__dirname, '..', 'sample_images_dir');
   let h = parseInt(req.query.h) || Jimp.AUTO;
   let w = parseInt(req.query.w) || Jimp.AUTO;
   let originPath = path.join(IMAGES_DIR, req.params.filename);
-  let thumbnailPath = path.join(IMAGES_DIR, filenameWithSuffix(req.params.filename, `-${w}x${h}`));
+  let thumbnailPath = path.join(__dirname, '..', 'cache', filenameWithSuffix(req.params.filename, `-${w}x${h}`));
 
   // send original image
   if (h == Jimp.AUTO && w == Jimp.AUTO) {
@@ -93,7 +93,9 @@ function getImg(req, res, next) {
           if ((h !== Jimp.AUTO && h < img.bitmap.height) || (w !== Jimp.AUTO && w < img.bitmap.width)) {
             // resize, write file, and send
             return img.resize(w, h).quality(60).getBufferAsync(Jimp.MIME_JPEG).then(imgBuf => {
-              fs.writeFile(thumbnailPath, imgBuf);
+              fs.ensureDir(path.dirname(thumbnailPath)).then(() => {
+                fs.writeFile(thumbnailPath, imgBuf);
+              });
               res.set('content-type', Jimp.MIME_JPEG);
               res.setHeader('Cache-Control', `public, max-age=${MAX_IMAGE_AGE_SEC}`);
               res.send(imgBuf)
