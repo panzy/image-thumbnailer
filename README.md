@@ -2,7 +2,20 @@
 
 图片缩略图服务。
 
+1. HTTP Server
+
 这是一个 HTTP 服务，给它一个图片目录，它将提供原图和缩略图。
+
+2. Daemon
+
+这是另一个服务，它监视一个目录，为每个新增的图片文件创建缩略图。
+
+如果运行：
+```
+$ node bin/thumbnail-daemon.js "/data/images"
+# or
+$ pm2 start bin/thumbnail-daemon.js -- "/data/images"
+```
 
 ## HTTP API
 
