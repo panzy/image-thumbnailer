@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const hound = require('hound');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -7,8 +6,6 @@ const path = require('path');
 // 在 Linux 上，convert 命令就是 "convert"，而在 Windows 上，convert 命令是
 // "magick convert"。
 let MAGICK_CMD = process.env.MAGICK_CMD || "magick convert";
-
-let debouncedGenThumbnail = _.debounce(genThumbnail, 1000);
 
 if (process.argv.length !== 3) {
   console.error('Usage: node thumbnail-daemon.js <image-dir>');
@@ -19,12 +16,12 @@ watcher = hound.watch(process.argv[2]);
  
 watcher.on('create', function(file, stats) {
   console.log(file + ' was created');
-  debouncedGenThumbnail(file);
+  genThumbnail(file);
 })
 
 watcher.on('change', function(file, stats) {
   console.log(file + ' was changed')
-  debouncedGenThumbnail(file);
+  genThumbnail(file);
 })
  
 watcher.on('delete', function(file) {
