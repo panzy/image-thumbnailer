@@ -34,7 +34,7 @@ watcher.on('delete', function(file) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * For a given file, if it's an image, create it's thumbnail as <file>.thumbnail.jpg
+ * For a given file, if it's an image, create it's thumbnail as <file-without-ext>-thumbnail.jpg
  */
 function genThumbnail(file) {
   // ignore tmp file (startsWith '~')
@@ -42,9 +42,9 @@ function genThumbnail(file) {
     return;
   }
 
-  if (!file.endsWith('.thumbnail.jpg') && file.match(/\.(jpg|jpeg|png|gif)$/i)) {
+  if (!file.endsWith('-thumbnail.jpg') && file.match(/\.(jpg|jpeg|png|gif)$/i)) {
     console.log(file + ' thumbnail...');
-    let thumbnail = file + '.thumbnail.jpg';
+    let thumbnail = file.substr(0, file.length - path.extname(file).length) + '-thumbnail.jpg';
     let cmd = `${MAGICK_CMD} -thumbnail 100x100 "${file}" "${thumbnail}"`; 
     exec(cmd).catch(error => {
       console.error(error);
