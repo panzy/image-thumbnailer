@@ -42,7 +42,9 @@ function genThumbnail(file) {
   if (!file.endsWith('-thumbnail.jpg') && file.match(/\.(jpg|jpeg|png|gif)$/i)) {
     console.log(file + ' thumbnail...');
     let thumbnail = file.substr(0, file.length - path.extname(file).length) + '-thumbnail.jpg';
-    let cmd = `${MAGICK_CMD} -thumbnail 100x100 "${file}" "${thumbnail}"`; 
+    // the reason I append [0] to source file is so it will not generate a sequence of thumbnails for GIF animations.
+    // for normal images, it has so side effect.
+    let cmd = `${MAGICK_CMD} -thumbnail 100x100 "${file}[0]" "${thumbnail}"`;
     exec(cmd).catch(error => {
       console.error(error);
     });
