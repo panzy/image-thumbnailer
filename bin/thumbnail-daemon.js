@@ -2,6 +2,7 @@ const _ = require('lodash');
 const hound = require('hound');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const path = require('path');
 
 let MAGICK_CMD = null;
 
@@ -54,6 +55,11 @@ function determineMagickCmd() {
 function genThumbnail(file) {
   if (!MAGICK_CMD) {
     console.warn('MAGICK_CMD is not determined.');
+    return;
+  }
+
+  // ignore tmp file (startsWith '~')
+  if (path.basename(file).startsWith('~')) {
     return;
   }
 
