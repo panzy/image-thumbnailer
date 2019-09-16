@@ -12,6 +12,12 @@ if (process.argv.length !== 3) {
   process.exit(1);
 }
 
+console.log('==================================================');
+console.log('MAGICK_CMD', MAGICK_CMD);
+console.log('watch dir', process.argv[2]);
+console.log('PATH env', process.env.PATH);
+console.log('==================================================');
+
 watcher = hound.watch(process.argv[2]);
  
 watcher.on('create', function(file, stats) {
