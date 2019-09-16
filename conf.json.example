@@ -1,0 +1,5 @@
+{
+  "watchDir": ".", 
+  "magickCmd": "在 Linux 上，convert 命令就是 convert，而在 Windows 上，convert 命令是 magick convert"
+}
+

@@ -2,23 +2,15 @@ const hound = require('hound');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const path = require('path');
-
-// 在 Linux 上，convert 命令就是 "convert"，而在 Windows 上，convert 命令是
-// "magick convert"。
-let MAGICK_CMD = process.env.MAGICK_CMD || "magick convert";
-
-if (process.argv.length !== 3) {
-  console.error('Usage: node thumbnail-daemon.js <image-dir>');
-  process.exit(1);
-}
+const conf = require('../conf.json');
 
 console.log('==================================================');
-console.log('MAGICK_CMD', MAGICK_CMD);
-console.log('watch dir', process.argv[2]);
+console.log('magick cmd', conf.magickCmd);
+console.log('watch dir', conf.watchDir);
 console.log('PATH env', process.env.PATH);
 console.log('==================================================');
 
-watcher = hound.watch(process.argv[2]);
+watcher = hound.watch(conf.watchDir);
  
 watcher.on('create', function(file, stats) {
   console.log(file + ' was created');
@@ -50,7 +42,7 @@ function genThumbnail(file) {
     let thumbnail = file.substr(0, file.length - path.extname(file).length) + '-thumbnail.jpg';
     // the reason I append [0] to source file is so it will not generate a sequence of thumbnails for GIF animations.
     // for normal images, it has so side effect.
-    let cmd = `${MAGICK_CMD} -thumbnail 100x100 "${file}[0]" "${thumbnail}"`;
+    let cmd = `${conf.magickCmd} -thumbnail 100x100 "${file}[0]" "${thumbnail}"`;
     exec(cmd).catch(error => {
       console.error(error);
     });
