@@ -37,7 +37,7 @@ function genThumbnail(file) {
     return;
   }
 
-  if (!file.endsWith('-thumbnail.jpg') && file.match(/\.(jpg|jpeg|png|gif)$/i)) {
+  if (!file.endsWith('thumbnail.jpg') && file.match(/\.(jpg|jpeg|png|gif)$/i)) {
     console.log(file + ' thumbnail...');
     let thumbnail = file.substr(0, file.length - path.extname(file).length) + '-thumbnail.jpg';
     // the reason I append [0] to source file is so it will not generate a sequence of thumbnails for GIF animations.
